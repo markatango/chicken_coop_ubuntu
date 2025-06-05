@@ -7,13 +7,13 @@ import { getFirestore } from 'firebase/firestore'; // Import Firestore if you pl
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY", // Replace with your project's API key
-  authDomain: "chickencoop-6cfba.firebaseapp.com", // Your project's auth domain
-  projectId: "chickencoop-6cfba", // Your project ID
-  storageBucket: "chickencoop-6cfba.appspot.com", // Your project's storage bucket
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID", // Replace with your sender ID
-  appId: "YOUR_APP_ID", // Replace with your app ID
-  measurementId: "YOUR_MEASUREMENT_ID" // Optional: Replace with your measurement ID if using Analytics
+  apiKey: "AIzaSyAkphFjuA9qJWV9p8wSRdbi_oTyTaVmh84",
+  authDomain: "chickencoop-6cfba.firebaseapp.com",
+  projectId: "chickencoop-6cfba",
+  storageBucket: "chickencoop-6cfba.firebasestorage.app",
+  messagingSenderId: "534064913642",
+  appId: "1:534064913642:web:b66600c7234bb7e0944b93",
+  measurementId: "G-ZRV70B09GB"
 };
 
 // Initialize Firebase

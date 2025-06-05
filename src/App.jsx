@@ -7,6 +7,7 @@ import AuthStatus from './AuthStatus'; // Import AuthStatus
 // Import Firestore functions if you plan to use them after login
 // import { collection, addDoc } from 'firebase/firestore';
 // import { db } from './firebaseConfig';
+import HomePage from './pages/HomePage';
 
 
 // Component that only renders if user is authenticated
@@ -30,11 +31,14 @@ const AuthenticatedAppContent = () => {
   //   }
   // }
 
+ 
+
   return (
     <div>
       <h1>Welcome to the Chickencoop App!</h1>
       <p>This is content only authenticated users can see.</p>
       <AuthStatus /> {/* Show sign out button */}
+      <HomePage user={user} onLogout={handleLogout} /> {/*from non-firebase content*/}
       {/* Add other authenticated content here */}
       {/* <button onClick={addPostForUser}>Add Example Post (requires Firestore)</button> */}
     </div>
@@ -82,33 +86,30 @@ function App() {
 
 
 //////
-import React, {useState, useEffect} from 'react';
-import Home from './page/Home';
-import Signup from './page/Signup';
-import Login from './page/Login';
-import { BrowserRouter as Router} from 'react-router-dom';
-import {Routes, Route} from 'react-router-dom';
+// import React, {useState, useEffect} from 'react';
+// import Home from './page/Home';
+// import Signup from './page/Signup';
+// import Login from './page/Login';
+// import { BrowserRouter as Router} from 'react-router-dom';
+// import {Routes, Route} from 'react-router-dom';
 
-function App() {
+// function App() {
 
-  return (
-    <Router>
-      <div>
-        <section>                              
-            <Routes>                                                                        <Route path="/" element={<Home/>}/>
-               <Route path="/signup" element={<Signup/>}/>
-               <Route path="/login" element={<Login/>}/>
-            </Routes>                    
-        </section>
-      </div>
-    </Router>
-  );
-}
+//   return (
+//     <Router>
+//       <div>
+//         <section>                              
+//             <Routes>                                                                        <Route path="/" element={<Home/>}/>
+//                <Route path="/signup" element={<Signup/>}/>
+//                <Route path="/login" element={<Login/>}/>
+//             </Routes>                    
+//         </section>
+//       </div>
+//     </Router>
+//   );
+// }
 
 // export default App;
-
-
-
 
 ///////
 
