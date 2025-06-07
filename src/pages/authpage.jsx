@@ -9,6 +9,7 @@ import { Eye, EyeOff, Lock, User, Mail, Clock, DoorOpen, DoorClosed, Users, Shie
 import { useFormValidation } from '../hooks/hooks';
 import { formatTimestamp, validateEmail, formatDate, validateTimeFormat  } from '../utils/utilityfunctions';
 import { USER_ROLES } from '../config/userroles';
+import authService from '../services/authService';
 
 const AuthPage = ({ onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);

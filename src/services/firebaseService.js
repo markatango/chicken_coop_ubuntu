@@ -2,16 +2,27 @@
 // FIREBASE SERVICE
 // =============================================
 
-import { USER_ROLES } from '../config/userroles';
+// =============================================
+// Live Mode
+// =============================================
 
-const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "123456789",
-  appId: "your-app-id"
-};
+// Replace the FirebaseService class with:
+import { initializeApp } from 'firebase/app';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, addDoc } from 'firebase/firestore';
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export const db = getFirestore(app);
+
+// =============================================
+// Mock Mode
+// =============================================
+
+
+
+import { USER_ROLES } from '../config/userroles';
+import { firebaseConfig } from '../firebaseConfig';
 
 class FirebaseService {
   constructor() {

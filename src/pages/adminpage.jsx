@@ -7,6 +7,7 @@ import FormInput from '../components/forminput';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, Lock, User, Mail, Clock, DoorOpen, DoorClosed, Users, Shield, Settings, Trash2, UserPlus } from 'lucide-react';
 import { useFormValidation } from '../hooks/hooks';
+import userService from '../services/userService';
 
 const AdminPage = ({ user, onLogout, onNavigateHome }) => {
   const [users, setUsers] = useState([]);

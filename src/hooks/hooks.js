@@ -1,7 +1,7 @@
 // =============================================
 // HOOKS
 // =============================================
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export const useFormValidation = (initialState) => {
   const [formData, setFormData] = useState(initialState);

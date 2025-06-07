@@ -37,3 +37,5 @@ const MessageLog = ({ messages, loading, hasMore, onScroll }) => (
     )}
   </div>
 );
+
+export default MessageLog;

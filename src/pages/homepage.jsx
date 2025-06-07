@@ -2,6 +2,7 @@ import Modal from '../components/modal';
 import Button from '../components/button';
 import Card from '../components/card';
 import LoadingSpinner from '../components/loadingspinner';
+import MessageLog from '../components/messagelog';
 import StatusIndicator from '../components/statusindicator';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Eye, EyeOff, Lock, User, Mail, Clock, DoorOpen, DoorClosed, Users, Shield, Settings, Trash2, UserPlus } from 'lucide-react'; 
