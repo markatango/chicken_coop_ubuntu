@@ -1,5 +1,5 @@
 import { formatDate } from '../utils/utilityfunctions';
-import { Eye, EyeOff, Lock, User, Mail, Clock, DoorOpen, DoorClosed, Users, Shield, Settings, Trash2, UserPlus } from 'lucide-react';
+import { User, Trash2 } from 'lucide-react';
 import { USER_ROLES } from '../config/userroles';
 
 const UserTable = ({ users, currentUserId, onRoleChange, onDeleteUser }) => (

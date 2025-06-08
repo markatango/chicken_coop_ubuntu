@@ -1,4 +1,4 @@
-import { formatTimestamp, validateEmail, formatDate, validateTimeFormat  } from '../utils/utilityfunctions';
+import { formatTimestamp } from '../utils/utilityfunctions';
 import LoadingSpinner from './loadingspinner';
 
 const MessageLog = ({ messages, loading, hasMore, onScroll }) => (

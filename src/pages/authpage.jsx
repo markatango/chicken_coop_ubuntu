@@ -1,14 +1,9 @@
-import Modal from '../components/modal';
 import Button from '../components/button';
-import Card from '../components/card';
-import LoadingSpinner from '../components/loadingspinner';
-import StatusIndicator from '../components/statusindicator';
 import FormInput from '../components/forminput';
-import React, { useState, useEffect, useCallback } from 'react';
-import { Eye, EyeOff, Lock, User, Mail, Clock, DoorOpen, DoorClosed, Users, Shield, Settings, Trash2, UserPlus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Eye, EyeOff, Lock, User, Mail} from 'lucide-react';
 import { useFormValidation } from '../hooks/hooks';
-import { formatTimestamp, validateEmail, formatDate, validateTimeFormat  } from '../utils/utilityfunctions';
-import { USER_ROLES } from '../config/userroles';
+import { validateEmail } from '../utils/utilityfunctions';
 import authService from '../services/authService';
 
 const AuthPage = ({ onLogin }) => {
