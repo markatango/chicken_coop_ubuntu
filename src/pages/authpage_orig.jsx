@@ -50,8 +50,7 @@ const AuthPage = ({ onLogin }) => {
     return true;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (!validateForm()) return;
     
     setLoading(true);
@@ -92,9 +91,8 @@ const AuthPage = ({ onLogin }) => {
           </div>
         </div>
 
-        {/* Sign Up Form */}
-        {isSignUp ? (
-          <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-6">
+          {isSignUp && (
             <FormInput
               label="Username"
               name="username"
@@ -104,114 +102,67 @@ const AuthPage = ({ onLogin }) => {
               placeholder="Enter your username"
               icon={User}
             />
+          )}
 
+          <FormInput
+            label="Email Address"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleInputChange}
+            error={errors.email}
+            placeholder="Enter your email"
+            icon={Mail}
+          />
+
+          <div>
             <FormInput
-              label="Email Address"
-              type="email"
-              name="email"
-              value={formData.email}
+              label="Password"
+              type={showPassword ? 'text' : 'password'}
+              name="password"
+              value={formData.password}
               onChange={handleInputChange}
-              error={errors.email}
-              placeholder="Enter your email"
-              icon={Mail}
+              error={errors.password}
+              placeholder="Enter your password"
+              icon={Lock}
             />
-
-            <div className="relative">
-              <FormInput
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                error={errors.password}
-                placeholder="Enter your password"
-                icon={Lock}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-11 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
-            </div>
-
-            <div className="relative">
-              <FormInput
-                label="Confirm Password"
-                type={showPassword ? 'text' : 'password'}
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleInputChange}
-                error={errors.confirmPassword}
-                placeholder="Confirm your password"
-                icon={Lock}
-              />
-            </div>
-
-            {errors.submit && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-                {errors.submit}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              loading={loading}
-              className="w-full"
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              style={{ marginTop: '16px' }}
             >
-              Create Account
-            </Button>
-          </form>
-        ) : (
-          /* Login Form */
-          <form onSubmit={handleSubmit} className="space-y-6">
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+          </div>
+
+          {isSignUp && (
             <FormInput
-              label="Email Address"
-              type="email"
-              name="email"
-              value={formData.email}
+              label="Confirm Password"
+              type={showPassword ? 'text' : 'password'}
+              name="confirmPassword"
+              value={formData.confirmPassword}
               onChange={handleInputChange}
-              error={errors.email}
-              placeholder="Enter your email"
-              icon={Mail}
+              error={errors.confirmPassword}
+              placeholder="Confirm your password"
+              icon={Lock}
             />
+          )}
 
-            <div className="relative">
-              <FormInput
-                label="Password"
-                type={showPassword ? 'text' : 'password'}
-                name="password"
-                value={formData.password}
-                onChange={handleInputChange}
-                error={errors.password}
-                placeholder="Enter your password"
-                icon={Lock}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-11 text-gray-400 hover:text-gray-600"
-              >
-                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-              </button>
+          {errors.submit && (
+            <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
+              {errors.submit}
             </div>
+          )}
 
-            {errors.submit && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-lg">
-                {errors.submit}
-              </div>
-            )}
-
-            <Button
-              type="submit"
-              loading={loading}
-              className="w-full"
-            >
-              Sign In
-            </Button>
-          </form>
-        )}
+          <Button
+            onClick={handleSubmit}
+            loading={loading}
+            className="w-full"
+          >
+            {isSignUp ? 'Create Account' : 'Sign In'}
+          </Button>
+        </div>
 
         <div className="mt-6 text-center">
           <button

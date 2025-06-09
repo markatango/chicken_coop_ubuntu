@@ -16,6 +16,7 @@ const FormInput = ({ label, type = 'text', name, value, onChange, error, placeho
           error ? 'border-red-500' : 'border-gray-300'
         }`}
         placeholder={placeholder}
+        autoComplete="on"
         {...props}
       />
     </div>
