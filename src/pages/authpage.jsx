@@ -43,6 +43,7 @@ const AuthPage = ({ onLogin }) => {
     
     if (Object.keys(newErrors).length > 0) {
       Object.entries(newErrors).forEach(([field, message]) => {
+        console.log(`validateForm error: ${ error.message}`)
         setError(field, message);
       });
       return false;

@@ -42,6 +42,7 @@ const AuthPage = ({ onLogin }) => {
     }
     
     if (Object.keys(newErrors).length > 0) {
+      console.log(`number of errors in validateForm: ${Object.keys(newErrors).length}`)
       Object.entries(newErrors).forEach(([field, message]) => {
         setError(field, message);
       });
@@ -63,6 +64,7 @@ const AuthPage = ({ onLogin }) => {
       }
       onLogin(result.user);
     } catch (error) {
+      console.log(`handleSubmit error: ${ error.message}`)
       setError('submit', error.message);
     } finally {
       setLoading(false);
