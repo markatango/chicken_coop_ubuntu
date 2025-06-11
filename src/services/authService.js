@@ -48,17 +48,18 @@ const authService = {
         userData.password
       );
       
-      const newUser = {
-        uid: result.user.uid,
-        email: result.user.email,
-        displayName: userData.username || result.user.email.split('@')[0],
-        role: USER_ROLES.USER,
-        createdAt: new Date().toISOString(),
-        lastLogin: new Date().toISOString()
-      };
+      // const newUser = {
+      //   uid: result.user.uid,
+      //   email: result.user.email,
+      //   password: result.user.password,
+      //   displayName: userData.username || result.user.email.split('@')[0],
+      //   role: USER_ROLES.USER,
+      //   createdAt: new Date().toISOString(),
+      //   lastLogin: new Date().toISOString()
+      // };
       
-      await firebaseService.createUserDocument(result.user.uid, newUser);
-      return { success: true, user: newUser };
+      // await firebaseService.createUserDocument(result.user.uid, newUser);
+      // return { success: true, user: newUser };
     } catch (error) {
       throw new Error(error.message || 'Registration failed');
     }

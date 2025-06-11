@@ -6,14 +6,44 @@
 // Live Mode
 // =============================================
 
-// Replace the FirebaseService class with:
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
 import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, addDoc } from 'firebase/firestore';
+import { USER_ROLES } from '../config/userroles';
+import { firebaseConfig } from '../firebaseConfig';
 
 const app = initializeApp(firebaseConfig);
+
+// Get the Authentication instance
 export const auth = getAuth(app);
+
+// Get the database instance
 export const db = getFirestore(app);
+
+// From Gemini:
+
+
+// Function to handle user sign up
+function handleSignUp(email, password) {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up successfully!
+      const user = userCredential.user;
+      console.log("User created:", user);
+      // You can now redirect the user or update your UI
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error("Error signing up:", errorCode, errorMessage);
+      // Display an error message to the user (e.g., email-already-in-use, weak-password)
+    });
+}
+
+// Example usage (replace with getting actual email/password from your form)
+// handleSignUp("newuser@example.com", "securepassword123");
+
 
 // =============================================
 // Mock Mode
@@ -21,13 +51,13 @@ export const db = getFirestore(app);
 
 
 
-import { USER_ROLES } from '../config/userroles';
-import { firebaseConfig } from '../firebaseConfig';
+
+
 
 class FirebaseService {
   constructor() {
     this.isInitialized = false;
-    this.mockUsers = new Map([
+    this.users = new Map([
       ['admin@example.com', {
         uid: 'admin-123',
         email: 'admin@example.com',
@@ -62,39 +92,93 @@ class FirebaseService {
     throw new Error('Invalid credentials');
   }
 
+  // Mock mode code
+  //=======================================================
+  // async createUserWithEmailAndPassword(email, password) {
+  //   await new Promise(resolve => setTimeout(resolve, 1000));
+  //   const newUser = {
+  //     uid: `user-${Date.now()}`,
+  //     email: email,
+  //     displayName: email.split('@')[0],
+  //     role: USER_ROLES.USER,
+  //     createdAt: new Date().toISOString(),
+  //     lastLogin: new Date().toISOString()
+  //   };
+  //   this.mockUsers.set(email, newUser);
+  //   return { user: newUser };
+  // }
+
+  //=======================================================
+
+  // Live mode code
+    //=======================================================
   async createUserWithEmailAndPassword(email, password) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
     const newUser = {
       uid: `user-${Date.now()}`,
       email: email,
+      password: password,
       displayName: email.split('@')[0],
       role: USER_ROLES.USER,
       createdAt: new Date().toISOString(),
       lastLogin: new Date().toISOString()
     };
-    this.mockUsers.set(email, newUser);
-    return { user: newUser };
+    const userCollection = collection(db, 'users');
+    const docref = await addDoc(userCollection,  {...newUser})
+    .then( ()=>console.log(`added new user ${JSON.stringify(newUser)}) `))
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error("Error signing up:", errorCode, errorMessage);
+      // Display an error message to the user (e.g., email-already-in-use, weak-password)
+    });
+    // console.log(`new user added: ${docref} :\n ${newUser}`)
+    return { "user": newUser };
   }
+
+  // async createUserWithEmailAndPassword(auth, email, password){
+  //   await setDoc((userCredential) => {
+  //     // Signed up successfully!
+  //     const user = userCredential.user;
+  //     console.log("User created:", user);
+  //     // You can now redirect the user or update your UI
+  //   })
+  //   .catch((error) => {
+  //     // Handle Errors here.
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
+  //     console.error("Error signing up:", errorCode, errorMessage);
+  //     // Display an error message to the user (e.g., email-already-in-use, weak-password)
+  //   });
 
   async signOut() {
     await new Promise(resolve => setTimeout(resolve, 500));
     console.log('User signed out');
   }
 
-  async getUserDocument(uid) {
+  async getDoc(uid) {
     await new Promise(resolve => setTimeout(resolve, 300));
     const user = Array.from(this.mockUsers.values()).find(u => u.uid === uid);
     return user ? { exists: true, data: user } : { exists: false };
   }
 
-  async createUserDocument(uid, userData) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const user = Array.from(this.mockUsers.entries()).find(([_, u]) => u.uid === uid);
-    if (user) {
-      this.mockUsers.set(user[0], { ...user[1], ...userData });
-    }
-    console.log('User document created:', userData);
-  }
+  // async createUserDocument(uid, userData) {
+  //   await new Promise(resolve => setTimeout(resolve, 300));
+  //   const user = Array.from(this.mockUsers.entries()).find(([_, u]) => u.uid === uid);
+  //   if (user) {
+  //     this.mockUsers.set(user[0], { ...user[1], ...userData });
+  //   }
+  //   console.log('User document created:', userData);
+  // }
+
+  // async createUserDocument(uid, userData) {
+  // try {
+  //   const docRef = await addDoc(collection(db, "users"))
+  //   console.log("Document written with ID: ", docRef.id);
+  // } catch (e) {
+  //   console.error("Error adding document: ", e);
+  // }
+
 
   async updateUserDocument(uid, updates) {
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -105,10 +189,32 @@ class FirebaseService {
     console.log('User document updated:', updates);
   }
 
-  async getAllUsers() {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    return Array.from(this.mockUsers.values()).map(user => ({ id: user.uid, ...user }));
-  }
+  //l From medium:
+//   const collectionName = import.meta.env.VITE_COLLECTON_NAME
+// const heroRef = collection(db, collectionName);
+    
+// const heroquery = query(heroRef, where("quirk", "==", quirk))
+// const snapshot = await getDocs(heroquery)
+// snapshot.forEach((doc) => {
+//    // doc.data() is never undefined for query doc snapshots
+//    alert(`${doc.id}=> ${doc.data().name}`);
+//  })
+// original
+  // async getAllUsers() {
+  //   await new Promise(resolve => setTimeout(resolve, 300));
+  //   return Array.from(this.mockUsers.values()).map(user => ({ id: user.uid, ...user }));
+  // }
+
+    async getAllUsers() {
+      let collectionName = "users";
+      const userRef = collection(db, collectionName);
+    
+      const userquery = query(userRef)
+      const snapshot = await getDocs(userquery)
+      return Array.from(snapshot).map(user => ({ id: user.uid, ...user }));
+    }
+
+
 
   async deleteUserDocument(uid) {
     await new Promise(resolve => setTimeout(resolve, 300));
@@ -118,6 +224,17 @@ class FirebaseService {
     }
     console.log('User document deleted:', uid);
   }
+
+  // firestore sample '
+//==========================================// Example: Add a new document to a collection
+
+
+
+
+
+
+//==========================================
+
 
   async addUserDocument(userData) {
     await new Promise(resolve => setTimeout(resolve, 300));

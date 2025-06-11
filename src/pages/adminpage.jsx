@@ -6,6 +6,7 @@ import FormInput from '../components/forminput';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Users, Settings, UserPlus } from 'lucide-react';
 import { useFormValidation } from '../hooks/hooks';
+import { validateEmail } from '../utils/utilityfunctions';
 import userService from '../services/userService';
 import UserTable from '../components/usertable';
 
