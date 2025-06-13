@@ -23,23 +23,7 @@ export const db = getFirestore(app);
 // From Gemini:
 
 
-// Function to handle user sign up
-function handleSignUp(email, password) {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up successfully!
-      const user = userCredential.user;
-      console.log("User created:", user);
-      // You can now redirect the user or update your UI
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Error signing up:", errorCode, errorMessage);
-      // Display an error message to the user (e.g., email-already-in-use, weak-password)
-    });
-}
+
 
 // Example usage (replace with getting actual email/password from your form)
 // handleSignUp("newuser@example.com", "securepassword123");
@@ -48,11 +32,6 @@ function handleSignUp(email, password) {
 // =============================================
 // Mock Mode
 // =============================================
-
-
-
-
-
 
 class FirebaseService {
   constructor() {
@@ -92,10 +71,25 @@ class FirebaseService {
     throw new Error('Invalid credentials');
   }
 
-  // Mock mode code
-  //=======================================================
+  async handleSignUp(email, password) {
+  createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      // Signed up successfully!
+      const user = userCredential.user;
+      console.log("User created:", user);
+      // You can now redirect the user or update your UI
+    })
+    .catch((error) => {
+      // Handle Errors here.
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error("Error signing up:", errorCode, errorMessage);
+      // Display an error message to the user (e.g., email-already-in-use, weak-password)
+    });
+}
+
   // async createUserWithEmailAndPassword(email, password) {
-  //   await new Promise(resolve => setTimeout(resolve, 1000));
+  //   let gotError = false
   //   const newUser = {
   //     uid: `user-${Date.now()}`,
   //     email: email,
@@ -104,37 +98,23 @@ class FirebaseService {
   //     createdAt: new Date().toISOString(),
   //     lastLogin: new Date().toISOString()
   //   };
-  //   this.mockUsers.set(email, newUser);
-  //   return { user: newUser };
-  // }
+  //   const userCollection = collection(db, 'users');
+  //   const docref = await addDoc(userCollection,  {newUser})
+  //   .then( ()=>{
+  //     console.log(`added new user ${JSON.stringify(newUser)}`)
+  //   })
+  //   .catch((error) => {
+  //     // Handle Errors here.
+  //     gotError = true;
+  //     const errorCode = error.code;
+  //     const errorMessage = error.message;
+  //     console.error("Error signing up:", errorCode, errorMessage);
+  //     // Display an error message to the user (e.g., email-already-in-use, weak-password)
+  //   });
+  //   return { success: gotError, user: newUser };
+  
 
-  //=======================================================
-
-  // Live mode code
-    //=======================================================
-  async createUserWithEmailAndPassword(email, password) {
-    const newUser = {
-      uid: `user-${Date.now()}`,
-      email: email,
-      password: password,
-      displayName: email.split('@')[0],
-      role: USER_ROLES.USER,
-      createdAt: new Date().toISOString(),
-      lastLogin: new Date().toISOString()
-    };
-    const userCollection = collection(db, 'users');
-    const docref = await addDoc(userCollection,  {...newUser})
-    .then( ()=>console.log(`added new user ${JSON.stringify(newUser)}) `))
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Error signing up:", errorCode, errorMessage);
-      // Display an error message to the user (e.g., email-already-in-use, weak-password)
-    });
-    // console.log(`new user added: ${docref} :\n ${newUser}`)
-    return { "user": newUser };
-  }
+  
 
   // async createUserWithEmailAndPassword(auth, email, password){
   //   await setDoc((userCredential) => {
