@@ -43,7 +43,7 @@ const AuthPage = ({ onLogin }) => {
     
     if (Object.keys(newErrors).length > 0) {
       Object.entries(newErrors).forEach(([field, message]) => {
-        console.log(`validateForm error: ${ error.message}`)
+        console.log(`validateForm error: ${field}: ${message}`)
         setError(field, message);
       });
       return false;
@@ -59,11 +59,14 @@ const AuthPage = ({ onLogin }) => {
     try {
       let result;
       if (isSignUp) {
+        console.log("signing up...")
         result = await authService.register(formData);
       } else {
+        console.log("signing in...")
         result = await authService.login(formData);
       }
-      onLogin(result.user);
+      console.log(`in submit: result: ${result}`)
+      // onLogin(result.user);
     } catch (error) {
       setError('submit', error.message);
     } finally {

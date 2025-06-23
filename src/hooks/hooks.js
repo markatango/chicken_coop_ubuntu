@@ -16,7 +16,7 @@ export const useFormValidation = (initialState) => {
   };
 
   const setError = (field, message) => {
-    console.log(`setError: ${message}`)
+    console.log(`setError: ${field}: ${message}`)
     setErrors(prev => ({ ...prev, [field]: message }));
   };
 

@@ -1,231 +1,487 @@
-// =============================================
-// FIREBASE SERVICE
-// =============================================
-
-// =============================================
-// Live Mode
-// =============================================
-
+  
+// firebaseService.js
 import { initializeApp } from 'firebase/app';
-import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc, updateDoc, deleteDoc, collection, getDocs, addDoc } from 'firebase/firestore';
-import { USER_ROLES } from '../config/userroles';
+import { 
+  getAuth, 
+  connectAuthEmulator,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  updateProfile,
+  sendPasswordResetEmail,
+  GoogleAuthProvider,
+  FacebookAuthProvider,
+  signInWithPopup
+} from 'firebase/auth';
+import { 
+  getFirestore, 
+  connectFirestoreEmulator,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  deleteDoc,
+  collection,
+  getDocs,
+  addDoc,
+  query,
+  where,
+  orderBy,
+  limit,
+  serverTimestamp,
+  writeBatch
+} from 'firebase/firestore';
+
+// Firebase configuration - Replace with your actual config
+// const firebaseConfig = {
+//   apiKey: "your-api-key-here",
+//   authDomain: "your-project-id.firebaseapp.com",
+//   projectId: "your-project-id",
+//   storageBucket: "your-project-id.appspot.com",
+//   messagingSenderId: "your-sender-id",
+//   appId: "your-app-id",
+//   measurementId: "your-measurement-id" // Optional for Analytics
+// };
+
 import { firebaseConfig } from '../firebaseConfig';
 
-const app = initializeApp(firebaseConfig);
-
-// Get the Authentication instance
-export const auth = getAuth(app);
-
-// Get the database instance
-export const db = getFirestore(app);
-
-// From Gemini:
-
-
-
-
-// Example usage (replace with getting actual email/password from your form)
-// handleSignUp("newuser@example.com", "securepassword123");
-
-
-// =============================================
-// Mock Mode
-// =============================================
+// User roles constants
+export const USER_ROLES = {
+  USER: 'user',
+  ADMINISTRATOR: 'administrator'
+};
 
 class FirebaseService {
   constructor() {
+    this.app = null;
+    this.auth = null;
+    this.db = null;
     this.isInitialized = false;
-    this.users = new Map([
-      ['admin@example.com', {
-        uid: 'admin-123',
-        email: 'admin@example.com',
-        displayName: 'Admin User',
-        role: USER_ROLES.ADMINISTRATOR,
-        createdAt: new Date(Date.now() - 86400000).toISOString(),
-        lastLogin: new Date().toISOString()
-      }],
-      ['user@example.com', {
-        uid: 'user-456',
-        email: 'user@example.com',
-        displayName: 'Regular User',
-        role: USER_ROLES.USER,
-        createdAt: new Date(Date.now() - 172800000).toISOString(),
-        lastLogin: new Date(Date.now() - 3600000).toISOString()
-      }]
-    ]);
+    this.isEmulatorConnected = false;
   }
 
-  async initialize() {
-    if (this.isInitialized) return;
-    console.log('Firebase initialized (mock mode)');
-    this.isInitialized = true;
+  /**
+   * Initialize Firebase services
+   * @param {boolean} useEmulator - Whether to use Firebase emulators for development
+   */
+  async initialize(useEmulator = false) {
+    try {
+      if (this.isInitialized) {
+        console.log('Firebase already initialized');
+        return;
+      }
+
+      // Initialize Firebase app
+      this.app = initializeApp(firebaseConfig);
+      
+      // Initialize Auth
+      this.auth = getAuth(this.app);
+      
+      // Initialize Firestore
+      this.db = getFirestore(this.app);
+
+      // Connect to emulators if in development
+      if (useEmulator && !this.isEmulatorConnected) {
+        try {
+          connectAuthEmulator(this.auth, 'http://localhost:9099');
+          connectFirestoreEmulator(this.db, 'localhost', 8080);
+          this.isEmulatorConnected = true;
+          console.log('Connected to Firebase emulators');
+        } catch (error) {
+          console.warn('Failed to connect to emulators:', error.message);
+        }
+      }
+
+      this.isInitialized = true;
+      console.log('Firebase initialized successfully');
+    } catch (error) {
+      console.error('Firebase initialization error:', error);
+      throw new Error('Failed to initialize Firebase');
+    }
   }
 
+  // =============================================
+  // AUTHENTICATION METHODS
+  // =============================================
+
+  /**
+   * Sign in user with email and password
+   */
   async signInWithEmailAndPassword(email, password) {
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    const mockUser = this.mockUsers.get(email);
-    if (mockUser && password === 'password') {
-      return { user: mockUser };
+    try {
+      const userCredential = await signInWithEmailAndPassword(this.auth, email, password);
+      return userCredential;
+    } catch (error) {
+      console.error('Sign in error:', error);
+      throw this.handleAuthError(error);
     }
-    throw new Error('Invalid credentials');
   }
 
-  async handleSignUp(email, password) {
-  createUserWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
-      // Signed up successfully!
-      const user = userCredential.user;
-      console.log("User created:", user);
-      // You can now redirect the user or update your UI
-    })
-    .catch((error) => {
-      // Handle Errors here.
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      console.error("Error signing up:", errorCode, errorMessage);
-      // Display an error message to the user (e.g., email-already-in-use, weak-password)
-    });
-}
+  /**
+   * Create new user with email and password
+   */
+  async createUserWithEmailAndPassword(email, password) {
+    try {
+      const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
+      return userCredential;
+    } catch (error) {
+      console.error('Sign up error:', error);
+      throw this.handleAuthError(error);
+    }
+  }
 
-  // async createUserWithEmailAndPassword(email, password) {
-  //   let gotError = false
-  //   const newUser = {
-  //     uid: `user-${Date.now()}`,
-  //     email: email,
-  //     displayName: email.split('@')[0],
-  //     role: USER_ROLES.USER,
-  //     createdAt: new Date().toISOString(),
-  //     lastLogin: new Date().toISOString()
-  //   };
-  //   const userCollection = collection(db, 'users');
-  //   const docref = await addDoc(userCollection,  {newUser})
-  //   .then( ()=>{
-  //     console.log(`added new user ${JSON.stringify(newUser)}`)
-  //   })
-  //   .catch((error) => {
-  //     // Handle Errors here.
-  //     gotError = true;
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     console.error("Error signing up:", errorCode, errorMessage);
-  //     // Display an error message to the user (e.g., email-already-in-use, weak-password)
-  //   });
-  //   return { success: gotError, user: newUser };
-  
-
-  
-
-  // async createUserWithEmailAndPassword(auth, email, password){
-  //   await setDoc((userCredential) => {
-  //     // Signed up successfully!
-  //     const user = userCredential.user;
-  //     console.log("User created:", user);
-  //     // You can now redirect the user or update your UI
-  //   })
-  //   .catch((error) => {
-  //     // Handle Errors here.
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     console.error("Error signing up:", errorCode, errorMessage);
-  //     // Display an error message to the user (e.g., email-already-in-use, weak-password)
-  //   });
-
+  /**
+   * Sign out current user
+   */
   async signOut() {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    console.log('User signed out');
+    try {
+      await signOut(this.auth);
+      console.log('User signed out successfully');
+    } catch (error) {
+      console.error('Sign out error:', error);
+      throw new Error('Failed to sign out');
+    }
   }
 
-  async getDoc(uid) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const user = Array.from(this.mockUsers.values()).find(u => u.uid === uid);
-    return user ? { exists: true, data: user } : { exists: false };
+  /**
+   * Update user profile
+   */
+  async updateUserProfile(updates) {
+    try {
+      const user = this.auth.currentUser;
+      if (!user) throw new Error('No authenticated user');
+      
+      await updateProfile(user, updates);
+      console.log('Profile updated successfully');
+    } catch (error) {
+      console.error('Profile update error:', error);
+      throw new Error('Failed to update profile');
+    }
   }
 
-  // async createUserDocument(uid, userData) {
-  //   await new Promise(resolve => setTimeout(resolve, 300));
-  //   const user = Array.from(this.mockUsers.entries()).find(([_, u]) => u.uid === uid);
-  //   if (user) {
-  //     this.mockUsers.set(user[0], { ...user[1], ...userData });
-  //   }
-  //   console.log('User document created:', userData);
-  // }
+  /**
+   * Send password reset email
+   */
+  async sendPasswordResetEmail(email) {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      console.log('Password reset email sent');
+    } catch (error) {
+      console.error('Password reset error:', error);
+      throw this.handleAuthError(error);
+    }
+  }
 
-  // async createUserDocument(uid, userData) {
-  // try {
-  //   const docRef = await addDoc(collection(db, "users"))
-  //   console.log("Document written with ID: ", docRef.id);
-  // } catch (e) {
-  //   console.error("Error adding document: ", e);
-  // }
+  /**
+   * Google sign in
+   */
+  async signInWithGoogle() {
+    try {
+      const provider = new GoogleAuthProvider();
+      provider.addScope('email');
+      provider.addScope('profile');
+      
+      const userCredential = await signInWithPopup(this.auth, provider);
+      return userCredential;
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      throw this.handleAuthError(error);
+    }
+  }
 
+  /**
+   * Facebook sign in
+   */
+  async signInWithFacebook() {
+    try {
+      const provider = new FacebookAuthProvider();
+      provider.addScope('email');
+      
+      const userCredential = await signInWithPopup(this.auth, provider);
+      return userCredential;
+    } catch (error) {
+      console.error('Facebook sign in error:', error);
+      throw this.handleAuthError(error);
+    }
+  }
 
+  /**
+   * Auth state observer
+   */
+  onAuthStateChanged(callback) {
+    return onAuthStateChanged(this.auth, callback);
+  }
+
+  /**
+   * Get current user
+   */
+  getCurrentUser() {
+    return this.auth?.currentUser || null;
+  }
+
+  // =============================================
+  // FIRESTORE METHODS
+  // =============================================
+
+  /**
+   * Get user document from Firestore
+   */
+  async getUserDocument(uid) {
+    try {
+      const userDocRef = doc(this.db, 'users', uid);
+      const userDoc = await getDoc(userDocRef);
+      
+      if (userDoc.exists()) {
+        return {
+          exists: true,
+          data: userDoc.data(),
+          id: userDoc.id
+        };
+      } else {
+        return { exists: false };
+      }
+    } catch (error) {
+      console.error('Get user document error:', error);
+      throw new Error('Failed to get user document');
+    }
+  }
+
+  /**
+   * Create user document in Firestore
+   */
+  async createUserDocument(uid, userData) {
+    try {
+      const userDocRef = doc(this.db, 'users', uid);
+      const dataWithTimestamp = {
+        ...userData,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+      
+      await setDoc(userDocRef, dataWithTimestamp);
+      console.log('User document created successfully');
+      return dataWithTimestamp;
+    } catch (error) {
+      console.error('Create user document error:', error);
+      throw new Error('Failed to create user document');
+    }
+  }
+
+  /**
+   * Update user document in Firestore
+   */
   async updateUserDocument(uid, updates) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const user = Array.from(this.mockUsers.entries()).find(([_, u]) => u.uid === uid);
-    if (user) {
-      this.mockUsers.set(user[0], { ...user[1], ...updates });
+    try {
+      const userDocRef = doc(this.db, 'users', uid);
+      const dataWithTimestamp = {
+        ...updates,
+        updatedAt: serverTimestamp()
+      };
+      
+      await updateDoc(userDocRef, dataWithTimestamp);
+      console.log('User document updated successfully');
+      return dataWithTimestamp;
+    } catch (error) {
+      console.error('Update user document error:', error);
+      throw new Error('Failed to update user document');
     }
-    console.log('User document updated:', updates);
   }
 
-  //l From medium:
-//   const collectionName = import.meta.env.VITE_COLLECTON_NAME
-// const heroRef = collection(db, collectionName);
-    
-// const heroquery = query(heroRef, where("quirk", "==", quirk))
-// const snapshot = await getDocs(heroquery)
-// snapshot.forEach((doc) => {
-//    // doc.data() is never undefined for query doc snapshots
-//    alert(`${doc.id}=> ${doc.data().name}`);
-//  })
-// original
-  // async getAllUsers() {
-  //   await new Promise(resolve => setTimeout(resolve, 300));
-  //   return Array.from(this.mockUsers.values()).map(user => ({ id: user.uid, ...user }));
-  // }
-
-    async getAllUsers() {
-      let collectionName = "users";
-      const userRef = collection(db, collectionName);
-    
-      const userquery = query(userRef)
-      const snapshot = await getDocs(userquery)
-      return Array.from(snapshot).map(user => ({ id: user.uid, ...user }));
-    }
-
-
-
+  /**
+   * Delete user document from Firestore
+   */
   async deleteUserDocument(uid) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const userEntry = Array.from(this.mockUsers.entries()).find(([_, u]) => u.uid === uid);
-    if (userEntry) {
-      this.mockUsers.delete(userEntry[0]);
+    try {
+      const userDocRef = doc(this.db, 'users', uid);
+      await deleteDoc(userDocRef);
+      console.log('User document deleted successfully');
+    } catch (error) {
+      console.error('Delete user document error:', error);
+      throw new Error('Failed to delete user document');
     }
-    console.log('User document deleted:', uid);
   }
 
-  // firestore sample '
-//==========================================// Example: Add a new document to a collection
+  /**
+   * Get all users from Firestore
+   */
+  async getAllUsers(limitCount = 100) {
+    try {
+      const usersRef = collection(this.db, 'users');
+      const q = query(
+        usersRef,
+        orderBy('createdAt', 'desc'),
+        limit(limitCount)
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const users = [];
+      
+      querySnapshot.forEach((doc) => {
+        users.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      return users;
+    } catch (error) {
+      console.error('Get all users error:', error);
+      throw new Error('Failed to get users');
+    }
+  }
 
+  /**
+   * Get users by role
+   */
+  async getUsersByRole(role) {
+    try {
+      const usersRef = collection(this.db, 'users');
+      const q = query(
+        usersRef,
+        where('role', '==', role),
+        orderBy('createdAt', 'desc')
+      );
+      
+      const querySnapshot = await getDocs(q);
+      const users = [];
+      
+      querySnapshot.forEach((doc) => {
+        users.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      
+      return users;
+    } catch (error) {
+      console.error('Get users by role error:', error);
+      throw new Error('Failed to get users by role');
+    }
+  }
 
-
-
-
-
-//==========================================
-
-
+  /**
+   * Create a new user document (for admin use)
+   */
   async addUserDocument(userData) {
-    await new Promise(resolve => setTimeout(resolve, 300));
-    const newUser = {
-      uid: `user-${Date.now()}`,
-      ...userData,
-      createdAt: new Date().toISOString()
-    };
-    this.mockUsers.set(userData.email, newUser);
-    return { id: newUser.uid };
+    try {
+      const usersRef = collection(this.db, 'users');
+      const dataWithTimestamp = {
+        ...userData,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
+      };
+      
+      const docRef = await addDoc(usersRef, dataWithTimestamp);
+      console.log('User document added successfully');
+      return { id: docRef.id, ...dataWithTimestamp };
+    } catch (error) {
+      console.error('Add user document error:', error);
+      throw new Error('Failed to add user document');
+    }
+  }
+
+  /**
+   * Batch update multiple users
+   */
+  async batchUpdateUsers(updates) {
+    try {
+      const batch = writeBatch(this.db);
+      
+      updates.forEach(({ uid, data }) => {
+        const userDocRef = doc(this.db, 'users', uid);
+        batch.update(userDocRef, {
+          ...data,
+          updatedAt: serverTimestamp()
+        });
+      });
+      
+      await batch.commit();
+      console.log('Batch update completed successfully');
+    } catch (error) {
+      console.error('Batch update error:', error);
+      throw new Error('Failed to batch update users');
+    }
+  }
+
+  // =============================================
+  // UTILITY METHODS
+  // =============================================
+
+  /**
+   * Handle authentication errors
+   */
+  handleAuthError(error) {
+    const errorCode = error.code;
+    let errorMessage = 'An authentication error occurred';
+
+    switch (errorCode) {
+      case 'auth/user-not-found':
+        errorMessage = 'No user found with this email address';
+        break;
+      case 'auth/wrong-password':
+        errorMessage = 'Incorrect password';
+        break;
+      case 'auth/email-already-in-use':
+        errorMessage = 'Email address is already registered';
+        break;
+      case 'auth/weak-password':
+        errorMessage = 'Password is too weak';
+        break;
+      case 'auth/invalid-email':
+        errorMessage = 'Invalid email address';
+        break;
+      case 'auth/user-disabled':
+        errorMessage = 'User account has been disabled';
+        break;
+      case 'auth/too-many-requests':
+        errorMessage = 'Too many failed attempts. Please try again later';
+        break;
+      case 'auth/network-request-failed':
+        errorMessage = 'Network error. Please check your connection';
+        break;
+      case 'auth/popup-closed-by-user':
+        errorMessage = 'Sign-in popup was closed';
+        break;
+      case 'auth/cancelled-popup-request':
+        errorMessage = 'Sign-in was cancelled';
+        break;
+      default:
+        errorMessage = error.message || 'Authentication failed';
+    }
+
+    return new Error(errorMessage);
+  }
+
+  /**
+   * Check if Firebase is initialized
+   */
+  isReady() {
+    return this.isInitialized && this.auth && this.db;
+  }
+
+  /**
+   * Get Firebase app instance
+   */
+  getApp() {
+    return this.app;
+  }
+
+  /**
+   * Get Auth instance
+   */
+  getAuth() {
+    return this.auth;
+  }
+
+  /**
+   * Get Firestore instance
+   */
+  getFirestore() {
+    return this.db;
   }
 }
 
-export default FirebaseService;
+// Create and export singleton instance
+const firebaseService = new FirebaseService();
+export default firebaseService;

@@ -1,7 +1,8 @@
 import { USER_ROLES } from "../config/userroles";
-import FirebaseService from "./firebaseService_mock";
+import firebaseService from './firebaseService.js';
+// import FirebaseService from "./firebaseService_fb";
 
-const firebaseService = new FirebaseService();
+// const firebaseService = new FirebaseService();
 
 const userService = {
   getAllUsers: async () => {
