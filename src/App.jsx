@@ -7,7 +7,7 @@ import AuthPage from './pages/authpage';
 import authService from './services/authService';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './components/loadingspinner';
-import userService from './services/userService';
+import userService from './services/userService_old';
 import { USER_ROLES } from './config/userroles';
 
 
