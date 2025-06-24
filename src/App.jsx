@@ -1,13 +1,13 @@
 // =============================================
 // MAIN APP
 // =============================================
-import HomePage from './pages/homepage';
+import { HomePage } from './pages/homepage_split';
 import AdminPage from './pages/adminpage';
 import AuthPage from './pages/authpage';
 import authService from './services/authService';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './components/loadingspinner';
-import userService from './services/userService_old';
+import userService from './services/userService';
 import { USER_ROLES } from './config/userroles';
 
 
