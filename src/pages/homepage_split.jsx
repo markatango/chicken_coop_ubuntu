@@ -7,6 +7,7 @@ import { Clock, DoorOpen, DoorClosed, Shield } from 'lucide-react';
 import { useSocketData } from '../hooks/hooks';
 import { USER_ROLES } from '../config/userroles';
 import apiService from '../services/apiService';
+import { validateTimeFormat } from '../utils/utilityfunctions';
 
 
 
@@ -106,14 +107,31 @@ export const HomePage = ({ user, onLogout, onNavigateToAdmin }) => {
       </header>
 
       <main className="max-w-4xl mx-auto p-6">
-        {/* Time Display and Status Indicators Row */}
+        {/* Time Display and Door Status Row */}
         <div className="grid md:grid-cols-2 gap-6 mb-6">
-          {/* Time Display */}
+          {/* Time Display with Door Status */}
           <Card title="Chicken Coop Time" className="">
-            <div className="flex items-center justify-center">
-              <Clock className="text-blue-600 mr-3" size={32} />
-              <div className="text-4xl font-bold text-gray-800">
-                {socketData.currentTime || '--:-- --'}
+            <div className="flex flex-col items-center space-y-4">
+              {/* Clock Display */}
+              <div className="flex items-center justify-center">
+                <Clock className="text-blue-600 mr-3" size={32} />
+                <div className="text-4xl font-bold text-gray-800">
+                  {socketData.currentTime || '--:-- --'}
+                </div>
+              </div>
+              
+              {/* Door Status Display */}
+              <div className="flex items-center justify-center">
+                {socketData.doorStatus === 'Open' ? (
+                  <DoorOpen className="text-green-600 mr-3" size={32} />
+                ) : (
+                  <DoorClosed className="text-red-600 mr-3" size={32} />
+                )}
+                <div className={`text-5xl font-bold ${
+                  socketData.doorStatus === 'Open' ? 'text-green-600' : 'text-red-600'
+                }`}>
+                  {socketData.doorStatus || 'Unknown'}
+                </div>
               </div>
             </div>
           </Card>
@@ -135,48 +153,36 @@ export const HomePage = ({ user, onLogout, onNavigateToAdmin }) => {
         {/* Control Panel */}
         <Card title="Control Panel">
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Door Status and Controls */}
+            {/* Door Controls */}
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Door Status
-                </label>
-                <div className="flex items-center space-x-3">
-                  {socketData.doorStatus === 'Open' ? (
-                    <DoorOpen className="text-green-600" size={24} />
-                  ) : (
-                    <DoorClosed className="text-red-600" size={24} />
-                  )}
-                  <input
-                    type="text"
-                    value={socketData.doorStatus}
-                    readOnly
-                    className="flex-1 px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg text-gray-800 font-medium"
-                    maxLength={20}
-                  />
-                </div>
+                <h3 className="text-lg font-medium text-gray-700 mb-4">Door Controls</h3>
+                {user && (
+                  <div className="flex space-x-3">
+                    <Button
+                      variant="danger"
+                      onClick={() => handleApiCall('/close')}
+                      loading={loading['/close']}
+                      className="flex-1"
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      variant="success"
+                      onClick={() => handleApiCall('/open')}
+                      loading={loading['/open']}
+                      className="flex-1"
+                    >
+                      Open
+                    </Button>
+                  </div>
+                )}
+                {!user && (
+                  <p className="text-sm text-gray-500 italic">
+                    Sign in to control door
+                  </p>
+                )}
               </div>
-
-              {user && (
-                <div className="flex space-x-3">
-                  <Button
-                    variant="danger"
-                    onClick={() => handleApiCall('/close')}
-                    loading={loading['/close']}
-                    className="flex-1"
-                  >
-                    Close
-                  </Button>
-                  <Button
-                    variant="success"
-                    onClick={() => handleApiCall('/open')}
-                    loading={loading['/open']}
-                    className="flex-1"
-                  >
-                    Open
-                  </Button>
-                </div>
-              )}
             </div>
 
             {/* Time Controls */}
