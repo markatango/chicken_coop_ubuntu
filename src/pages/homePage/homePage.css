@@ -1,0 +1,408 @@
+/* HomePage.css */
+
+/* Main container */
+.home-page {
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #f0fdf4, #dbeafe);
+}
+
+/* Header */
+.home-header {
+  background: white;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.home-header-container {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.home-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 4rem;
+}
+
+.home-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.home-user-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.home-welcome {
+  color: #6b7280;
+}
+
+/* Main content */
+.home-main {
+  max-width: 64rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+/* Top row with time and status */
+.home-top-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .home-top-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card component */
+.home-card {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+}
+
+.home-card-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1rem;
+}
+
+/* Time and door status panel */
+.time-door-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.time-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.time-icon {
+  color: #2563eb;
+  margin-right: 0.75rem;
+}
+
+.time-text {
+  font-size: 2.25rem;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+.door-status-display {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.door-icon {
+  margin-right: 0.75rem;
+}
+
+.door-icon.open {
+  color: #16a34a;
+}
+
+.door-icon.closed {
+  color: #dc2626;
+}
+
+.door-status-text {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.door-status-text.open {
+  color: #16a34a;
+}
+
+.door-status-text.closed {
+  color: #dc2626;
+}
+
+/* Status indicators panel */
+.status-indicators {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.status-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.status-indicator-light {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  border: 4px solid;
+  transition: all 0.3s;
+}
+
+.status-indicator-light.active {
+  background-color: #ef4444;
+  border-color: #dc2626;
+  box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.3);
+}
+
+.status-indicator-light.inactive {
+  background-color: #d1d5db;
+  border-color: #9ca3af;
+}
+
+.status-indicator-label {
+  font-size: 0.75rem;
+  color: #6b7280;
+  margin-top: 0.5rem;
+  text-align: center;
+}
+
+/* Control panel */
+.control-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .control-panel {
+    grid-template-columns: 1fr;
+  }
+}
+
+.control-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.control-section-title {
+  font-size: 1.125rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 1rem;
+}
+
+/* Door controls */
+.door-controls {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.door-control-btn {
+  flex: 1;
+  font-weight: 500;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.door-control-btn.close {
+  background-color: #ef4444;
+  color: white;
+}
+
+.door-control-btn.close:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
+.door-control-btn.close:disabled {
+  background-color: #fca5a5;
+}
+
+.door-control-btn.open {
+  background-color: #10b981;
+  color: white;
+}
+
+.door-control-btn.open:hover:not(:disabled) {
+  background-color: #059669;
+}
+
+.door-control-btn.open:disabled {
+  background-color: #6ee7b7;
+}
+
+.door-control-btn:disabled {
+  cursor: not-allowed;
+}
+
+/* Time controls */
+.time-control-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.time-control-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 0.5rem;
+}
+
+.time-control-input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  transition: all 0.2s;
+}
+
+.time-control-input:focus {
+  outline: none;
+  ring: 2px solid #3b82f6;
+  border-color: transparent;
+}
+
+.time-control-input:disabled {
+  background-color: #f3f4f6;
+  color: #6b7280;
+  cursor: not-allowed;
+}
+
+.time-control-input.loading {
+  opacity: 0.5;
+}
+
+.login-prompt {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-style: italic;
+}
+
+/* Message log */
+.message-log {
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  height: 16rem;
+  overflow-y: auto;
+  background-color: #f9fafb;
+}
+
+.message-log-loading {
+  text-align: center;
+  color: #6b7280;
+  padding: 0.5rem;
+}
+
+.message-log-loading-spinner {
+  display: inline-block;
+  animation: spin 1s linear infinite;
+  border-radius: 50%;
+  height: 1rem;
+  width: 1rem;
+  border: 2px solid #3b82f6;
+  border-top-color: transparent;
+}
+
+.message-log-loading-text {
+  margin-left: 0.5rem;
+}
+
+.message-log-empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 2rem;
+}
+
+.message-log-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.message-log-item {
+  font-size: 0.875rem;
+}
+
+.message-timestamp {
+  color: #6b7280;
+  font-family: monospace;
+  font-size: 0.75rem;
+}
+
+.message-text {
+  margin-left: 0.5rem;
+  color: #1f2937;
+}
+
+.message-log-end {
+  text-align: center;
+  color: #9ca3af;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 0.5rem;
+}
+
+.message-log-instructions {
+  margin-top: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+/* Button variants for admin panel link */
+.admin-panel-btn {
+  background-color: #7c3aed;
+  color: white;
+  font-weight: 500;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.admin-panel-btn:hover {
+  background-color: #6d28d9;
+}
+
+.admin-panel-icon {
+  margin-right: 0.5rem;
+}
+
+.logout-btn {
+  background-color: #ef4444;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  transition: background-color 0.2s;
+  border: none;
+  cursor: pointer;
+}
+
+.logout-btn:hover {
+  background-color: #dc2626;
+}
+
+/* Animations */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

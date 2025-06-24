@@ -1,10 +1,12 @@
-import Button from '../components/button';
-import FormInput from '../components/forminput';
+import Button from '../../components/button';
+import FormInput from '../../components/forminput';
 import React, { useState } from 'react';
 import { Eye, EyeOff, Lock, User, Mail} from 'lucide-react';
-import { useFormValidation } from '../hooks/hooks';
-import { validateEmail } from '../utils/utilityfunctions';
-import authService from '../services/authService';
+import { useFormValidation } from '../../hooks/hooks';
+import { validateEmail } from '../../utils/utilityfunctions';
+import authService from '../../services/authService';
+
+import './authPage.css';
 
 const AuthPage = ({ onLogin }) => {
   const [isSignUp, setIsSignUp] = useState(false);

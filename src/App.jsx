@@ -1,9 +1,9 @@
 // =============================================
 // MAIN APP
 // =============================================
-import { HomePage } from './pages/homepage';
-import AdminPage from './pages/adminpage';
-import AuthPage from './pages/authpage';
+import { HomePage } from './pages/homePage/homepage';
+import AdminPage from './pages/adminPage/adminpage';
+import AuthPage from './pages/authPage/authpage';
 import authService from './services/authService';
 import { useState, useEffect } from 'react';
 import LoadingSpinner from './components/loadingspinner';

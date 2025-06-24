@@ -1,13 +1,13 @@
-import Button from '../components/button';
-import Card from '../components/card';
-import MessageLog from '../components/messagelog';
-import StatusIndicator from '../components/statusindicator';
+import Button from '../../components/button';
+import Card from '../../components/card';
+import MessageLog from '../../components/messagelog';
+import StatusIndicator from '../../components/statusindicator';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Clock, DoorOpen, DoorClosed, Shield } from 'lucide-react'; 
-import { useSocketData } from '../hooks/hooks';
-import { USER_ROLES } from '../config/userroles';
-import apiService from '../services/apiService';
-import { validateTimeFormat } from '../utils/utilityfunctions';
+import { useSocketData } from '../../hooks/hooks';
+import { USER_ROLES } from '../../config/userroles';
+import apiService from '../../services/apiService';
+import { validateTimeFormat } from '../../utils/utilityfunctions';
 
 
 

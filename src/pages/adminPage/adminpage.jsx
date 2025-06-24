@@ -1,14 +1,14 @@
-import Modal from '../components/modal';
-import Button from '../components/button';
-import Card from '../components/card';
-import LoadingSpinner from '../components/loadingspinner';
-import FormInput from '../components/forminput';
+import Modal from '../../components/modal';
+import Button from '../../components/button';
+import Card from '../../components/card';
+import LoadingSpinner from '../../components/loadingspinner';
+import FormInput from '../../components/forminput';
 import React, { useState, useEffect, useCallback } from 'react';
 import { Users, Settings, UserPlus } from 'lucide-react';
-import { useFormValidation } from '../hooks/hooks';
-import { validateEmail } from '../utils/utilityfunctions';
-import userService from '../services/userService';
-import UserTable from '../components/usertable';
+import { useFormValidation } from '../../hooks/hooks';
+import { validateEmail } from '../../utils/utilityfunctions';
+import userService from '../../services/userService';
+import UserTable from '../../components/usertable';
 
 const AdminPage = ({ user, onLogout, onNavigateHome }) => {
   const [users, setUsers] = useState([]);
