@@ -1,7 +1,7 @@
 // =============================================
 // MAIN APP
 // =============================================
-import { HomePage } from './pages/homepage_split';
+import { HomePage } from './pages/homepage';
 import AdminPage from './pages/adminpage';
 import AuthPage from './pages/authpage';
 import authService from './services/authService';
