@@ -40,6 +40,11 @@ export const useFormValidation = (initialState) => {
   };
 };
 
+const doorStatusGen = (rn) =>{
+  const statuses = ['Open', 'Closed', 'Moving...'];
+  return statuses[Math.floor(rn * statuses.length)];
+}
+
 export const useSocketData = () => {
   const [socketData, setSocketData] = useState({
     currentTime: '',
@@ -66,8 +71,8 @@ export const useSocketData = () => {
           Math.random() > 0.5,
           Math.random() > 0.5
         ],
-        doorStatus: Math.random() > 0.5 ? 'Open' : 'Closed'
-      }));
+        doorStatus: doorStatusGen(Math.random())
+       }));
     }, 2000);
     
     return () => clearInterval(mockInterval);

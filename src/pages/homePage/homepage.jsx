@@ -130,7 +130,7 @@ export const HomePage = ({ user, onLogout, onNavigateToAdmin }) => {
                 <div className={`text-5xl font-bold ${
                   socketData.doorStatus === 'Open' ? 'text-green-600' : 'text-red-600'
                 }`}>
-                  {socketData.doorStatus || 'Unknown'}
+                  {socketData.doorStatus || 'Moving..'}
                 </div>
               </div>
             </div>
