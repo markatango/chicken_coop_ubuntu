@@ -1,5 +1,5 @@
 export const process_env = {
-  REACT_APP_APIKEY: "AIzaSyAkphFjuA9qJWV9p8wSRdbi_oTyTaVmh84",
+  REACT_APP_APIKEY: "AIzaSyDWgH00aydrLeCe_2aReODw6488KwJBLLo",
   REACT_APP_AUTHDOMAIN: "chickencoop-6cfba.firebaseapp.com",
   REACT_APP_PROJECTID: "chickencoop-6cfba",
   REACT_APP_STORAGEBUCKETt: "chickencoop-6cfba.firebasestorage.app",
