@@ -3,7 +3,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore'; // Import Firestore if you plan to use it
-import { process_env } from '../env-config-process-local';
+import { process_env } from '../env-config';
 
 const { 
   REACT_APP_APIKEY,
