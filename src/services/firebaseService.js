@@ -33,17 +33,6 @@ import {
   writeBatch
 } from 'firebase/firestore';
 
-// Firebase configuration - Replace with your actual config
-// const firebaseConfig = {
-//   apiKey: "your-api-key-here",
-//   authDomain: "your-project-id.firebaseapp.com",
-//   projectId: "your-project-id",
-//   storageBucket: "your-project-id.appspot.com",
-//   messagingSenderId: "your-sender-id",
-//   appId: "your-app-id",
-//   measurementId: "your-measurement-id" // Optional for Analytics
-// };
-
 import { firebaseConfig } from '../firebaseConfig';
 
 // User roles constants
